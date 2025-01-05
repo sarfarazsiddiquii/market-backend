@@ -24,7 +24,6 @@ def usecase_generate():
         return jsonify({"error": "Company name is required"}), 400
 
     try:
-        # Step 1: Market Analysis
         market_analysis_task = get_market_analysis_task(company_name)
         analysis_crew = Crew(
             agents=[market_research_analyst],
@@ -34,7 +33,6 @@ def usecase_generate():
         market_analysis_result = analysis_crew.kickoff()
         market_analysis_raw = market_analysis_result.raw if hasattr(market_analysis_result, 'raw') else "No market analysis found"
 
-        # Step 2: AI/ML Opportunities
         ai_use_cases_task = get_ai_use_cases_task(market_analysis_raw)
         ai_use_cases_crew = Crew(
             agents=[ai_solutions_strategist],
@@ -43,8 +41,7 @@ def usecase_generate():
         )
         ai_use_cases_result = ai_use_cases_crew.kickoff()
         ai_use_cases_raw = ai_use_cases_result.raw if hasattr(ai_use_cases_result, 'raw') else "No AI use cases found"
-
-        # Step 3: Resource Collection
+        
         resource_task = get_resource_collection_task(ai_use_cases_raw)
         resource_crew = Crew(
             agents=[resource_collector],
@@ -54,7 +51,6 @@ def usecase_generate():
         resource_result = resource_crew.kickoff()
         resource_raw = resource_result.raw if hasattr(resource_result, 'raw') else "No resources found"
 
-        # Return results as JSON
         return jsonify({
             "company_name": company_name,
             "market_analysis": market_analysis_raw,

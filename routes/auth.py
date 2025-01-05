@@ -34,7 +34,6 @@ def login():
 
     user = Config.users_collection.find_one({'username': username})
     if user and check_password_hash(user['password'], password):
-        # Generate JWT token
         access_token = create_access_token(identity=username, expires_delta=timedelta(hours=1))
         return jsonify({
             "message": f"Welcome {username}!",
@@ -43,12 +42,12 @@ def login():
 
     return jsonify({"error": "Invalid credentials"}), 401
 
-@auth_bp.route('/logout', methods=['POST'])
+@auth_bp.route('/logout', methods=['POST']) #only via backend
 @jwt_required()
 def logout():
     return jsonify({"message": "Logged out successfully!"}), 200
 
-@auth_bp.route('/profile', methods=['GET'])
+@auth_bp.route('/profile', methods=['GET']) #checking
 @jwt_required()
 def profile():
     current_user = get_jwt_identity()
